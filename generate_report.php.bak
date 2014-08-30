@@ -1,0 +1,106 @@
+
+
+<?php
+session_start();
+require('Config.php');
+?>
+
+<html>
+<head>
+
+<style>
+table,th,td
+{
+border:1px solid black;
+border-collapse:collapse;
+}
+th,td
+{
+padding:5px;
+}
+</style>
+</head>
+<body>
+<?php
+/*if(!(isset($_SESSION['loginauth'])))
+{
+	die;
+}
+*/
+if(!(isset($_POST['pd'])))
+{
+	header('Location: get_report.php');
+	
+}
+?>
+<table style="width:300px">
+<tr>
+  <th>First Name</th>
+  <th>Last Name</th>		
+  <th>ID</th>
+  <?php
+  $problems = array();
+  
+  foreach(glob($old_assignments_dir . '*.*') as $prob)
+  {
+  	if(!($prob === "OLD_ASSIGNMENTS_FOLDER"))
+  	{
+	  	?>
+	  	<th><?php echo pathinfo($prob,PATHINFO_FILENAME); ?></th>
+	 	 	<?php
+	 	 	array_push($problems,pathinfo($prob,PATHINFO_FILENAME));
+	 	 	
+ 	  }
+  }
+  
+  
+  ?>
+</tr>
+
+<?php
+$mysqli = new mysqli($db_ip,$db_user,$db_pass,$db_name);
+$stmt  = $mysqli->prepare('SELECT * FROM `students` WHERE `period`=?');
+$stmt->bind_param('s',$_POST['pd']);
+$stmt->execute();
+$results = $stmt->get_result()->fetch_all();
+foreach($results as $row)
+{
+	
+	$problems_array = unserialize($row[5]);
+	if(strlen($row[5]) == 0)
+		$problems_array = array();
+	?>
+	<tr>
+		
+	<td> <?php echo $row[2]; ?>    </td>
+	<td> <?php echo $row[3]; ?>    </td>
+	<td> <?php echo $row[6]; ?>    </td>
+	<?php
+	foreach($problems as $prob)
+	{
+		if(array_key_exists($prob,$problems_array))
+		{
+			
+			?>
+			
+			<td>ACCEPTED</td>
+			<?php
+		}
+		else
+		{
+			?>
+			<td>NULL</td>
+			<?php
+		}
+	
+	}
+	?>
+	</tr>
+	<?php
+	
+	
+}
+?>
+</tr>
+</body>
+</html>

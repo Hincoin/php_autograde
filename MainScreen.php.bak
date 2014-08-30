@@ -1,0 +1,90 @@
+<?php session_start();require("Config.php"); ?>
+<html>
+<body>
+<?php
+
+
+if(isset($_SESSION['logins']))
+{
+	
+	
+	
+		
+	 //$client = stream_socket_client("tcp://127.0.0.1:5555",$errno,$errstr);
+	 
+	  //echo '<td><script language s= "JavaScript" type = "text/JavaScript">document.write("");</script></td>';
+	  $r1 = $_SESSION['logins'];
+	  ?>
+	  <div align=right><a href="Redoit.php">Logout</a>  </div>
+	  <center><strong>Welcome <u><?php echo($r1['First_Name']." ".$r1['Last_Name']); ?></u></strong></center>
+		<br/>
+		<center><strong>Not you?</strong> <a href="Redoit.php">Sign in to your account</a></center>
+	 	<br/>
+	 	<br />
+	 	<br />
+	 	<br />
+	 	<br />
+	  <center><strong>Please Select An Assignment </strong></center>
+	  <br />
+	  <br />
+	  
+	
+		<?php
+		
+		
+		$options = array();//array('Homewo1','Homework2','Homework3');
+		foreach(glob($assignments_dir .'*.*') as $filename)
+		{
+			if(!($filename === "OLD_ASSIGNMENTS_FOLDER"))
+				array_push($options,pathinfo($filename,PATHINFO_FILENAME));
+		}
+		?>
+		<form name="problem_form" action="upload_file.php" enctype="multipart/form-data" method="POST">
+			<div align="center">
+				<select name="assignments" id="assignments">
+				<option value="0" > Please select an assignment</option>
+		<?php
+		foreach($options as $value)
+		{
+			?>
+				
+					<option value=<?php echo $value; ?> > <?php echo "$value" ?> </option>
+			
+			<?php
+		}
+		?>
+		
+				</select>
+			</div> 
+		<br/>
+		<br />
+		<center><strong>Please Upload Your Java File</strong></center>
+		<br />
+		<center>
+			
+					<input type="file" name="file" id="file"><br>
+					<br />
+					
+					<input type="submit" name="submit" value="Submit">
+   </center>
+		<?php
+		
+
+
+	
+		
+	
+	
+}
+else
+{
+	header('Location: SampleForm.php');
+}
+
+
+
+?>
+
+</body>
+</html>
+	
