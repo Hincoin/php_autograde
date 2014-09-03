@@ -56,7 +56,7 @@ $stmt = $mysqli->prepare("SELECT * FROM `students` WHERE `Username`= ?");
 		exit();
 		
 	}
-if(strpos($_POST['username']) !== 0 
+//if(strpos($_POST['username']) !== 0 
 $stmt = $mysqli->prepare("INSERT INTO `students` (`Username`, `Password`, `First_Name`, `Last_Name`, `problems_solved`, `problems`, `student_id`, `period`) VALUES (?,?,?,?,0,'',?,?)");
 $stmt->bind_param('ssssss',$_POST['username'],$password,$_POST['first'],$_POST['last'],$_POST['id'],$_POST['period']);
 $val = $stmt->execute();	
