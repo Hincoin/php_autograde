@@ -21,6 +21,14 @@ if(strlen($_POST['username']) == 0)
 	<?php
 	exit();
 }
+if(strpos($_POST['username']," ") !== false)
+{
+ ?>
+ <h2><center><strong> No spaces allowed in username. Please go back and fix this.</strong></center></h2>
+
+ <?php
+ exit();
+}
 if(strlen($_POST['password']) == 0)
 {
 	?>
@@ -40,6 +48,13 @@ if($_POST['period'] < 1 || $_POST['period'] > 8)
 {
 	?>
 	<h2><center><strong>Invalid period number entered ( must be between 1 and 8). Please go back and enter the period you will have AP Computer Science.</strong></center></h2>
+	<?php
+	exit();
+}
+if(strlen($_POST['id']) != 10)
+{
+	?>
+	<h2><center><strong> Invalid Student ID </strong></center></h2>
 	<?php
 	exit();
 }
