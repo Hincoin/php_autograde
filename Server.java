@@ -23,7 +23,7 @@ class Config {
 	public static final String assignmentDir = "/var/www/assignments/";//"C:\\wamp\\assignments\\";
 	public static final String uploadDir = "/var/www/upload/";//"C:\\wamp\\www\\upload\\";
 	public static final String securityPolicy = "/var/www/studentpolicy.policy";//"C:\\wamp\\www\\studentpolicy.policy";
-	public static final String inputDir = "/var/www/input";//"C:\\wamp\\www\\input\\";
+	public static final String inputDir = "/var/www/input/";//"C:\\wamp\\www\\input\\";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -61,9 +61,9 @@ class ClassExecutor implements Runnable {
 			String user = sbr.readLine();
 			System.out.println("User = " + user);
 			System.out
-					.println("JAVAC " + Config.uploadDir + user + "\\" + file);
+					.println("JAVAC " + Config.uploadDir + user + "/" + file);
 			Process compile = Runtime.getRuntime().exec(
-					"javac " + Config.uploadDir + user + "\\" + file);
+					"javac " + Config.uploadDir + user + "/" + file);
 			File input = new File(Config.inputDir + problemName);
 
 			BufferedReader compileR = new BufferedReader(new InputStreamReader(
@@ -161,13 +161,13 @@ class ClassExecutor implements Runnable {
 			if(codeOutput.ready())
 			while ((read_bytes = proc.getInputStream().read(code_buffer)) > 0) {
 				codeS += new String(code_buffer, 0, read_bytes);
-				codeS += '\n';
+				codeS += System.lineSeparator();
 			}
-			if (codeS.indexOf('\n') != -1)
-				codeS = codeS.substring(0, codeS.lastIndexOf('\n'));
 			if (codeS.indexOf(System.lineSeparator()) != -1)
 				codeS = codeS.substring(0, codeS.lastIndexOf(System.lineSeparator()));
-			codeS = codeS.replace("\r", "");
+		//	if (codeS.indexOf(System.lineSeparator()) != -1)
+		//		codeS = codeS.substring(0, codeS.lastIndexOf(System.lineSeparator()));
+		//	codeS = codeS.replace("\r", "");
 			 System.out.println("Expected: " + expectedOutput);
 			 System.out.println("Code: " + codeS);
 			if (codeS.equals(expectedOutput)) {
