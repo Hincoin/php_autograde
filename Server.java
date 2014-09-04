@@ -19,11 +19,11 @@ class Config {
 	/**
 	 * @param args
 	 */
-	public static final String webRoot = "C:\\wamp\\www\\";
-	public static final String assignmentDir = "C:\\wamp\\assignments\\";
-	public static final String uploadDir = "C:\\wamp\\www\\upload\\";
-	public static final String securityPolicy = "C:\\wamp\\www\\studentpolicy.policy";
-	public static final String inputDir = "C:\\wamp\\www\\input\\";
+	public static final String webRoot = "/var/www/";//"C:\\wamp\\www\\";
+	public static final String assignmentDir = "/var/www/assignments/";//"C:\\wamp\\assignments\\";
+	public static final String uploadDir = "/var/www/upload/";//"C:\\wamp\\www\\upload\\";
+	public static final String securityPolicy = "/var/www/studentpolicy.policy";//"C:\\wamp\\www\\studentpolicy.policy";
+	public static final String inputDir = "/var/www/input";//"C:\\wamp\\www\\input\\";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
