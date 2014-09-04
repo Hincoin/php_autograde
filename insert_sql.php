@@ -64,9 +64,13 @@ if($val == 1)
 {
 	
 	
-	?>
+	mkdir($upload_dir.$_POST['username'].'/');
+	mkdir($upload_dir.$_POST['username'].'/'.'ACCEPTED_CODE/');
 	
+	?>
+
 	<h2>Thank you for subscribing. You may begin submitting homework assignments!</h2>
+	<center><a href="SampleForm.php">Login!</a></center>
 	<?php
 }
 else
