@@ -52,6 +52,7 @@ class ClassExecutor implements Runnable {
 	}
 
 	public void run() {
+		Process proc = null;
 		try {
 
 			BufferedReader sbr = new BufferedReader(new InputStreamReader(
@@ -97,7 +98,7 @@ class ClassExecutor implements Runnable {
 			ProcessBuilder pb = new ProcessBuilder(arg);
 			if(input.exists())
 				pb.redirectInput(input);
-			Process proc = pb.start();
+			 proc = pb.start();
 					/*
 					Runtime
 					.getRuntime()
@@ -179,6 +180,10 @@ class ClassExecutor implements Runnable {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			proc.destroy();
+			System.out.println("RETURNING");
+			return;
+//			Thread.stop();
 		}
 	}
 
@@ -209,13 +214,13 @@ class SocketHandler implements Runnable {
 		return diagnostic;
 	}
 
-	public void run() {
+	public void run()  {
 
 		try {
 			ClassExecutor ce = new ClassExecutor(filename);
 			ce.s = s;
 			fut = es.submit(ce);
-			fut.get(150, TimeUnit.SECONDS);
+			fut.get(5, TimeUnit.SECONDS);
 
 			result = ce.getResult();
 			diagnostic = ce.getDiagnostic();
@@ -227,15 +232,27 @@ class SocketHandler implements Runnable {
 			}
 
 		} catch (TimeoutException te) {
+			System.out.println("TIMED-OUT!!");
 			fut.cancel(true);
 			try {
 				s.getOutputStream().write(
 						("6" + System.lineSeparator()).getBytes());
 			} catch (Exception e) {
 			}
-		} catch (Exception e) {
-		} finally {
-			fut.cancel(true);
+			return;
+		} catch (Exception e) {}
+		
+		  finally {
+
+				if(fut.isDone())return;				
+				if(fut.cancel(true))
+				{		
+					System.out.println("Cancel good");
+				}				
+				else 
+					System.out.println("NO CANCEL");
+ 				
+				
 		}
 
 	}
