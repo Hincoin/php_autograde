@@ -79,17 +79,14 @@ class ClassExecutor implements Runnable {
 			System.out.println("Feeding: " + "java -Duser.dir="
 					+ Config.uploadDir
 					+ user
-					+ " -Djava.security.manager -Djava.security.policy="
-					+ Config.securityPolicy + " "
-					+ file.substring(0, file.length() - 5) + " < "
+					+ "/ -Djava.security.manager "+ file.substring(0, file.length() - 5) + " < "
 					+ Config.inputDir + problemName);
 			String arg[] = {
 					
 				"java",
-				"-Duser.dir="+Config.uploadDir + user,
+				"-Duser.dir="+Config.uploadDir + user+"/",
 				
-				"-Djava.security.manager -Djava.security.policy="
-				+ Config.securityPolicy,
+				"-Djava.security.manager",
 				 file.substring(0, file.length() - 5)
 				
 				
