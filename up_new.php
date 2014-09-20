@@ -1,12 +1,10 @@
-
-
-<?php 
-
-session_start(); require('Config.php'); 
+<?php session_start(); require('Config.php'); ?>
+<?php
 
 $allowedExts = array("java");
 $temp = explode(".", $_FILES["file"]["name"]);
 $extension = end($temp);
+
 if (in_array($extension, $allowedExts)) 
 {
   if ($_FILES["file"]["error"] > 0) 
@@ -110,7 +108,6 @@ if (in_array($extension, $allowedExts))
     	else if($decode == "4")
     	{
     		
-    			
 	        copy($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"],$upload_dir.$_SESSION['username'].'/ACCEPTED_CODE/'.time().$_FILES['file']['name']);
 	
 	    		?>
@@ -129,31 +126,22 @@ if (in_array($extension, $allowedExts))
 					$stmt->bind_param('ss',$database_store,$_SESSION['username']);
 					
 					$stmt->execute();
-					
 					$stmt = $mysqli->prepare('SELECT * FROM `students` WHERE `username` = ?');
 					$stmt->bind_param('s',$_SESSION['username']);
 					$stmt->execute();
-					$res = $stmt->get_result()->fetch_assoc();
+					$res = $stmt->get_result();
 	
-				
+						
 					$_SESSION['logins']['problems'] = $database_store;
 					
-					if(strlen($res['prob_to_file']) != 0)	
-					{
-						$prob_to_file = unserialize($res['prob_to_file']);
-					}
+					if(strlen($res[8]) != 0)	
+						$prob_to_file = unserialize($res[8]);
 					else
-					{
 					 	$prob_to_file = array();
-					}
-					
-					$prob_to_file[$_POST['assignments']] = "".time()."".$_FILES['file']['name'];	
-				  echo "adding " . "".time()."".$_FILES['file']['name'] . " for " . $_POST['assignments'];
-				  ?><br /><br /><?php
-				  
+					 	
+					$prob_to_file[$_POST['assignments']] = time().$_FILES['file']['name'];				
 					$prob_str = serialize($prob_to_file);
-					$stmt = $mysqli->prepare('UPDATE `students` SET `prob_to_file` = ? WHERE `username`=?');
-					
+					$stmt = mysqli->prepare('UPDATE `students` SET `prob_to_file` = ? WHERE `username`=?');
 					$stmt->bind_param('ss',$prob_str,$_SESSION['username']);
 					$stmt->execute();		
 					
@@ -174,16 +162,17 @@ if (in_array($extension, $allowedExts))
       	
       	<?php
       }
-			
-	       unlink(realpath($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"]));
-	       ?>
-				 <br /><br />
-			
-				 <h3>File: <?php echo $_FILES['file']['name']; ?> submitted.</h3>
-			
-			   <br />
-			   <h3>Problem Attempted: <?php echo $_POST['assignments']; ?></h3>
-			   <?php
+			?>
+      <?php
+            unlink(realpath($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"]));
+        ?>
+			<br /><br />
+		
+			<h3>File: <?php echo $_FILES['file']['name']; ?> submitted.</h3>
+		
+			<br />
+			<h3>Problem Attempted: <?php echo $_POST['assignments']; ?></h3>
+			<?php
     }
     
   }

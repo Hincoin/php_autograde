@@ -1,27 +1,18 @@
-
-
-<?php 
-
-session_start(); require('Config.php'); 
+<?php session_start(); require('Config.php'); ?>
+<?php
 
 $allowedExts = array("java");
 $temp = explode(".", $_FILES["file"]["name"]);
 $extension = end($temp);
-if (in_array($extension, $allowedExts)) 
-{
-  if ($_FILES["file"]["error"] > 0) 
-  {
-    echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
-  }
-  else 
-  {
+
+if (in_array($extension, $allowedExts)) {
+  if ($_FILES["file"]["error"] > 0) {
+    //echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
+  } else {
  
-    if (file_exists("upload/" . session_id().$_FILES["file"]["name"])) 
-    {
+    if (file_exists("upload/" . session_id().$_FILES["file"]["name"])) {
       echo $_FILES["file"]["name"].session_id() . " already exists. ";
-    } 
-    else 
-    {
+    } else {
     
       if($_POST['assignments'] === '0')
       {
@@ -39,8 +30,7 @@ if (in_array($extension, $allowedExts))
       		<?php
       		exit();
       }
-      $cando = move_uploaded_file($_FILES["file"]["tmp_name"],$upload_dir.$_SESSION["username"]."/".$_FILES["file"]["name"]);   
-
+     	
       $client = fsockopen($proc_server_ip,$proc_server_port,$errno,$errstr,$proc_server_connection_timeout);
      
       $bytes_written = fwrite($client,$_POST["assignments"].PHP_EOL.$_FILES['file']["name"].PHP_EOL.$_SESSION['username'].PHP_EOL);
@@ -52,11 +42,12 @@ if (in_array($extension, $allowedExts))
       $buf = fgets($client,100);
       $diag = "";
       $decode = substr($buf,0,strlen($buf)-strlen(PHP_EOL));
-  	  if($decode === "2" || $decode === "3")
+    //  echo $buf;
+  	 if($decode === "2" || $decode === "3")
       {
       	$diag = fgets($client,200);
       }
-      if($decode !== "1") // if it wasn't a compiliation error, remove the .class file
+      if($decode !== "1") // if it wasn't a compiliation error
       {
       	unlink($upload_dir.$_SESSION['username'].'/'. pathinfo($_FILES['file']['name'],PATHINFO_FILENAME).'.class');
      	}
@@ -64,6 +55,7 @@ if (in_array($extension, $allowedExts))
       <font size="7"><u><strong>Result: </strong></u></font>
       
       <?php
+      
       if($decode === "1")
       {
       	?>
@@ -110,53 +102,27 @@ if (in_array($extension, $allowedExts))
     	else if($decode == "4")
     	{
     		
-    			
-	        copy($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"],$upload_dir.$_SESSION['username'].'/ACCEPTED_CODE/'.time().$_FILES['file']['name']);
-	
-	    		?>
-	      	<font size="7" color="green"><strong>Accepted</strong></font>
-	      	<h2><strong>Congratulations! Your code printed the expected output!</strong></h2>
-	      	
-	      	<?php
-	    	
-	      	$problems_array[$_POST['assignments']] = 1;
-	
-	      	$mysqli = new mysqli($db_ip,$db_user,$db_pass,$db_name);
-	
-					$database_store = serialize($problems_array);
-					$stmt = $mysqli->prepare('UPDATE `students` SET `problems_solved` = `problems_solved`+1,`problems` = ? WHERE `username` = ?');
-					
-					$stmt->bind_param('ss',$database_store,$_SESSION['username']);
-					
-					$stmt->execute();
-					
-					$stmt = $mysqli->prepare('SELECT * FROM `students` WHERE `username` = ?');
-					$stmt->bind_param('s',$_SESSION['username']);
-					$stmt->execute();
-					$res = $stmt->get_result()->fetch_assoc();
-	
+        copy($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"],$upload_dir.$_SESSION['username'].'/ACCEPTED_CODE/'.time().$_FILES['file']['name']);
+
+    		?>
+      	<font size="7" color="green"><strong>Accepted</strong></font>
+      	<h2><strong>Congratulations! Your code printed the expected output!</strong></h2>
+      	<?php
+    	
+      	$problems_array[$_POST['assignments']] = 1;
+
+      	$mysqli = new mysqli($db_ip,$db_user,$db_pass,$db_name);
+
+				$database_store = serialize($problems_array);
+				$stmt = $mysqli->prepare('UPDATE `students` SET `problems_solved` = `problems_solved`+1,`problems` = ? WHERE `username` = ?');
 				
-					$_SESSION['logins']['problems'] = $database_store;
-					
-					if(strlen($res['prob_to_file']) != 0)	
-					{
-						$prob_to_file = unserialize($res['prob_to_file']);
-					}
-					else
-					{
-					 	$prob_to_file = array();
-					}
-					
-					$prob_to_file[$_POST['assignments']] = "".time()."".$_FILES['file']['name'];	
-				  echo "adding " . "".time()."".$_FILES['file']['name'] . " for " . $_POST['assignments'];
-				  ?><br /><br /><?php
-				  
-					$prob_str = serialize($prob_to_file);
-					$stmt = $mysqli->prepare('UPDATE `students` SET `prob_to_file` = ? WHERE `username`=?');
-					
-					$stmt->bind_param('ss',$prob_str,$_SESSION['username']);
-					$stmt->execute();		
-					
+				$stmt->bind_param('ss',$database_store,$_SESSION['username']);
+				
+				$stmt->execute();
+				$_SESSION['logins']['problems'] = $database_store;
+				
+			
+				
       	
     	}
     	else if($decode == "5")
@@ -174,22 +140,21 @@ if (in_array($extension, $allowedExts))
       	
       	<?php
       }
-			
-	       unlink(realpath($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"]));
-	       ?>
-				 <br /><br />
-			
-				 <h3>File: <?php echo $_FILES['file']['name']; ?> submitted.</h3>
-			
-			   <br />
-			   <h3>Problem Attempted: <?php echo $_POST['assignments']; ?></h3>
-			   <?php
+			?>
+      <?php
+            unlink(realpath($upload_dir.$_SESSION['username'].'/'.$_FILES["file"]["name"]));
+        ?>
+			<br /><br />
+		
+			<h3>File: <?php echo $_FILES['file']['name']; ?> submitted.</h3>
+		
+			<br />
+			<h3>Problem Attempted: <?php echo $_POST['assignments']; ?></h3>
+			<?php
     }
     
   }
-}
-else 
-{
+} else {
   echo "Invalid filetype. Only upload .java files. Please go back and try again.";
 }
 

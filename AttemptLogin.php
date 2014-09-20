@@ -31,7 +31,7 @@ if($_POST["username"] && $_POST["password"])
 	$mysqli = new mysqli($db_ip,$db_user,$db_pass,$db_name);
 
 	
-	$stmt = $mysqli->prepare('SELECT * FROM ' . $db_table . ' WHERE Username = ? AND Password = ?');
+	$stmt = $mysqli->prepare('SELECT * FROM ' . $db_table . ' WHERE BINARY Username = ? AND Password = ?');
 	$stmt->bind_param('ss',$username,$p_hash);
 	
 	$stmt->execute();
