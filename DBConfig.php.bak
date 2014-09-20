@@ -1,7 +1,0 @@
-<?php
-$db_ip = "tcp://127.0.0.1";
-$db_pass = "PACO1111";
-$db_port = 5555;
-
-
-?>
